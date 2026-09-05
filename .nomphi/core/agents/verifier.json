@@ -1,0 +1,14 @@
+{
+  "role": "verifier",
+  "model_binding": "verifier",
+  "inputs": [
+    "spec.md",
+    "threat-model.md",
+    "diff",
+    "implementation-report.md"
+  ],
+  "outputs": [
+    "verification tests",
+    "verification-report.md"
+  ]
+}

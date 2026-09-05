@@ -1,0 +1,15 @@
+{
+  "project_id": "REPLACE_ME",
+  "name": "Replace Me",
+  "project_type": "other",
+  "default_risk": "MEDIUM",
+  "stack": [],
+  "mandatory_skills": [
+    "testing"
+  ],
+  "risk_raise_signals": [],
+  "documentation_paths": [
+    "README.md",
+    "docs/"
+  ]
+}

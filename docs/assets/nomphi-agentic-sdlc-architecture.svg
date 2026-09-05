@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1180" viewBox="0 0 1600 1180">
+<defs>
+  <style>
+    .bg{fill:#f7f9fc}.card{fill:#fff;stroke:#d8e0ec;stroke-width:2}.navy{fill:#0b2545}.teal{fill:#087f8c}.muted{fill:#60708a}.line{stroke:#8ba2bf;stroke-width:3;fill:none}.dash{stroke:#8ba2bf;stroke-width:3;fill:none;stroke-dasharray:8 8}.title{font:700 52px Inter,Arial,sans-serif;fill:#0b2545}.h1{font:700 31px Inter,Arial,sans-serif;fill:#0b2545}.h2{font:700 23px Inter,Arial,sans-serif;fill:#0b2545}.body{font:400 19px Inter,Arial,sans-serif;fill:#33445f}.small{font:400 16px Inter,Arial,sans-serif;fill:#60708a}.pill{fill:#edf4fb;stroke:#c8d8e8;stroke-width:1.5}.pill2{fill:#e8f6f4;stroke:#b5ded8;stroke-width:1.5}.white{fill:#fff}.center{text-anchor:middle}.bold{font-weight:700}
+  </style>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#456789"/></marker>
+  <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1668c7"/></marker>
+  <marker id="arrowTeal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#087f8c"/></marker>
+</defs>
+<rect class="bg" width="1600" height="1180"/>
+<text x="800" y="72" class="title center">Nomphi Agentic SDLC</text>
+<text x="800" y="108" class="body center">Reusable multi-agent engineering architecture for any Nomphi software project</text>
+<text x="800" y="138" class="small center">Separation of duties • persistent artifacts • deterministic gates • controlled model cost • low vendor lock-in</text>
+<rect x="55" y="175" width="1490" height="220" rx="18" class="card"/>
+<text x="82" y="214" class="h1">Core / Project boundary</text>
+<rect x="85" y="238" width="520" height="130" rx="14" class="pill"/>
+<circle cx="125" cy="275" r="22" class="navy"/><text x="125" y="282" class="white center h2">C</text>
+<text x="160" y="272" class="h2">Nomphi Core</text>
+<text x="160" y="300" class="body">Agents • manifests • workflow • routing • gates</text>
+<text x="160" y="327" class="body">permissions • shared skills • schemas • templates</text>
+<text x="345" y="352" class="small center">Defines HOW Nomphi develops software</text>
+<line x1="645" y1="302" x2="945" y2="302" class="line" marker-end="url(#arrow)"/>
+<text x="795" y="275" class="h2 center">strict boundary</text>
+<text x="795" y="333" class="small center">Core never contains project-specific rules</text>
+<rect x="980" y="238" width="485" height="130" rx="14" class="pill2"/>
+<circle cx="1020" cy="275" r="22" class="teal"/><text x="1020" y="282" class="white center h2">P</text>
+<text x="1055" y="272" class="h2">Project Adapter</text>
+<text x="1055" y="300" class="body">Domain • stack • invariants • commands</text>
+<text x="1055" y="327" class="body">security boundaries • project skills</text>
+<text x="1220" y="352" class="small center">Defines WHAT is being developed</text>
+<rect x="55" y="425" width="980" height="650" rx="18" class="card"/>
+<text x="82" y="465" class="h1">Pipeline</text>
+<g>
+<rect x="320" y="490" width="450" height="58" rx="12" class="pill"/><text x="545" y="526" class="h2 center">Requirement</text>
+<line x1="545" y1="548" x2="545" y2="575" class="line" marker-end="url(#arrow)"/>
+<rect x="320" y="582" width="450" height="64" rx="12" class="pill"/><text x="545" y="608" class="h2 center">Orchestrator</text><text x="545" y="632" class="small center">local model + deterministic state machine</text>
+<line x1="545" y1="646" x2="545" y2="674" class="line" marker-end="url(#arrow)"/>
+<rect x="320" y="681" width="450" height="64" rx="12" class="pill"/><text x="545" y="707" class="h2 center">Planner / Claude</text><text x="545" y="731" class="small center">specification + acceptance criteria</text>
+<line x1="545" y1="745" x2="545" y2="773" class="line" marker-end="url(#arrow)"/>
+<rect x="320" y="780" width="450" height="64" rx="12" class="pill2"/><text x="545" y="806" class="h2 center">Security Design / Gemini</text><text x="545" y="830" class="small center">threat model + security acceptance criteria</text>
+<line x1="545" y1="844" x2="545" y2="872" class="line" marker-end="url(#arrow)"/>
+<rect x="320" y="879" width="450" height="64" rx="12" class="pill"/><text x="545" y="905" class="h2 center">Implementer / Ollama</text><text x="545" y="929" class="small center">code + local tests</text>
+<line x1="545" y1="943" x2="545" y2="971" class="line" marker-end="url(#arrow)"/>
+<rect x="320" y="978" width="450" height="64" rx="12" class="pill"/><text x="545" y="1004" class="h2 center">Verifier / OpenAI</text><text x="545" y="1028" class="small center">independent adversarial verification</text>
+</g>
+<path d="M320 1010 C180 1010 180 910 315 910" class="line" stroke="#1668c7" marker-end="url(#arrowBlue)"/><text x="185" y="952" class="small" fill="#1668c7">REJECT → implementation</text>
+<path d="M770 1010 C900 1010 900 855 775 813" class="dash" marker-end="url(#arrow)"/><text x="820" y="905" class="small">spec defect → planning</text>
+<rect x="1065" y="425" width="480" height="650" rx="18" class="card"/>
+<text x="1092" y="465" class="h1">Independent gates</text>
+<rect x="1100" y="500" width="410" height="95" rx="14" class="pill2"/><text x="1305" y="533" class="h2 center">Security Audit / Gemini</text><text x="1305" y="560" class="small center">auth • authz • BOLA/IDOR • secrets</text><text x="1305" y="583" class="small center">dependencies • abuse cases • data exposure</text>
+<rect x="1100" y="625" width="410" height="85" rx="14" class="pill"/><text x="1305" y="657" class="h2 center">Documenter / Ollama</text><text x="1305" y="685" class="small center">documents accepted implementation</text>
+<rect x="1100" y="740" width="410" height="105" rx="14" class="pill2"/><text x="1305" y="772" class="h2 center">Release Gate</text><text x="1305" y="800" class="small center">tests • typecheck • lint • E2E</text><text x="1305" y="823" class="small center">verification • security • documentation</text>
+<rect x="1100" y="885" width="410" height="70" rx="14" fill="#0b2545"/><text x="1305" y="928" class="h2 center white">Commit / Merge / Release</text>
+<text x="1305" y="1000" class="body center">CRITICAL / HIGH security finding</text><text x="1305" y="1027" class="h2 center" fill="#087f8c">BLOCKS RELEASE</text>
+<rect x="55" y="1100" width="1490" height="1" fill="#d8e0ec"/>
+<text x="85" y="1142" class="h2">Persistent artifacts:</text>
+<text x="330" y="1142" class="body">requirement.md → spec.md → threat-model.md → implementation-report.md → verification-report.md → security-report.md → documentation-report.md → release-report.md → state.json</text>
+</svg>

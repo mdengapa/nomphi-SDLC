@@ -1,0 +1,12 @@
+{
+  "role": "release",
+  "model_binding": "release",
+  "inputs": [
+    "all task artifacts",
+    "project commands",
+    "core gates"
+  ],
+  "outputs": [
+    "release-report.md"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "role": "planner",
+  "model_binding": "planner",
+  "inputs": [
+    "requirement.md",
+    "project adapter",
+    "selected skills"
+  ],
+  "outputs": [
+    "spec.md"
+  ]
+}

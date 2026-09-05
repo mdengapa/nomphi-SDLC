@@ -1,0 +1,47 @@
+version: 2
+
+global:
+  block_on_unresolved_severity: [BLOCKER, CRITICAL, HIGH]
+
+planning:
+  required_artifacts: [spec.md]
+  required_content:
+    - scope
+    - out_of_scope
+    - acceptance_criteria
+    - invariants
+    - test_plan
+    - definition_of_done
+
+security_design:
+  required_when_policy_demands: [threat-model.md]
+
+implementation:
+  required_artifacts: [implementation-report.md]
+  required_evidence:
+    - implementation_tests_executed
+    - no_silent_scope_expansion
+    - dependencies_and_schema_changes_declared
+
+verification:
+  required_artifacts: [verification-report.md]
+  accepted_verdicts: [ACCEPT, ACCEPT_WITH_MINOR_ISSUES]
+  rejected_verdicts: [REJECT]
+
+security:
+  required_when_policy_demands: [security-report.md]
+  accepted_verdicts: [PASS, PASS_WITH_LOW_MEDIUM_FINDINGS]
+  blocked_verdicts: [BLOCK_RELEASE]
+
+documentation:
+  required_artifacts: [documentation-report.md]
+
+release:
+  required_artifacts: [release-report.md]
+  deterministic_checks:
+    - project_test_commands
+    - project_typecheck_command_when_configured
+    - project_lint_command_when_configured
+    - project_e2e_command_when_required
+    - unresolved_findings
+    - required_task_artifacts

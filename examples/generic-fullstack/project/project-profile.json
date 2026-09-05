@@ -1,0 +1,26 @@
+{
+  "project_id": "EXAMPLE_WEB",
+  "name": "Generic Full-stack Example",
+  "project_type": "fullstack-web",
+  "default_risk": "MEDIUM",
+  "stack": [
+    "TypeScript",
+    "React",
+    "Node.js",
+    "PostgreSQL"
+  ],
+  "mandatory_skills": [
+    "testing",
+    "frontend-design",
+    "backend-api",
+    "database"
+  ],
+  "risk_raise_signals": [
+    "admin_action",
+    "bulk_data_export"
+  ],
+  "documentation_paths": [
+    "README.md",
+    "docs/"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "orchestrator": {
+    "provider": "ollama",
+    "model": "qwen3:14b",
+    "purpose": "routing/context preparation; deterministic engine authoritative"
+  },
+  "planner": {
+    "provider": "anthropic",
+    "model": "SET_CURRENT_CLAUDE_MODEL",
+    "purpose": "architecture and specification"
+  },
+  "implementer": {
+    "provider": "ollama",
+    "model": "qwen3-coder:30b",
+    "purpose": "implementation and implementation tests"
+  },
+  "verifier": {
+    "provider": "openai",
+    "model": "SET_CURRENT_OPENAI_CODE_MODEL",
+    "purpose": "independent verification and adversarial testing"
+  },
+  "security": {
+    "provider": "google",
+    "model": "SET_CURRENT_GEMINI_MODEL",
+    "purpose": "security design and AppSec audit"
+  },
+  "documenter": {
+    "provider": "ollama",
+    "model": "qwen3-coder:30b",
+    "purpose": "technical documentation"
+  },
+  "release": {
+    "provider": "local",
+    "model": "deterministic",
+    "fallback_model": "qwen3:8b",
+    "purpose": "release evidence only"
+  }
+}

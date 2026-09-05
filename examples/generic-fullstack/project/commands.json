@@ -1,0 +1,17 @@
+{
+  "test": [
+    "npm test"
+  ],
+  "typecheck": [
+    "npm run typecheck"
+  ],
+  "lint": [
+    "npm run lint"
+  ],
+  "e2e": [
+    "npm run e2e"
+  ],
+  "security": [
+    "npm audit"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "role": "implementer",
+  "model_binding": "implementer",
+  "inputs": [
+    "spec.md",
+    "threat-model.md when present",
+    "project adapter",
+    "selected skills"
+  ],
+  "outputs": [
+    "code",
+    "tests",
+    "implementation-report.md"
+  ]
+}

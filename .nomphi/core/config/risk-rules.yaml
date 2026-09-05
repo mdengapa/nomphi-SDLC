@@ -1,0 +1,21 @@
+version: 2
+
+core_raise_signals:
+  HIGH:
+    - authentication
+    - authorization
+    - role_or_permission_change
+    - personal_or_sensitive_data
+    - messaging_or_chat
+    - file_upload
+    - payment_or_financial_side_effect
+    - secrets_or_credentials
+    - security_control
+    - destructive_or_transformative_migration
+    - production_infrastructure
+    - externally_visible_irreversible_side_effect
+
+rules:
+  - human_assigned_risk_cannot_be_lowered_by_agent
+  - project_may_add_raise_signals
+  - project_may_not_disable_core_raise_signals_without_explicit_human_exception

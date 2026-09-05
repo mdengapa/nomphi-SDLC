@@ -1,0 +1,13 @@
+{
+  "role": "documenter",
+  "model_binding": "documenter",
+  "inputs": [
+    "accepted artifacts",
+    "final diff",
+    "project documentation"
+  ],
+  "outputs": [
+    "documentation",
+    "documentation-report.md"
+  ]
+}

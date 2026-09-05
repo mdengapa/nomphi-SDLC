@@ -1,0 +1,43 @@
+version: 2
+
+orchestrator:
+  production_code_write: false
+  task_artifact_write: true
+  shell: restricted
+  production_access: false
+planner:
+  production_code_write: false
+  task_artifact_write: true
+  shell: read_only_inspection
+  production_access: false
+implementer:
+  production_code_write: true
+  test_write: true
+  task_artifact_write: true
+  shell: development
+  production_access: false
+  forbidden: [git_push, production_deploy, secret_rotation, destructive_remote_commands]
+verifier:
+  production_code_write: false
+  test_write: true
+  task_artifact_write: true
+  shell: test_and_analysis
+  production_access: false
+security:
+  production_code_write: false
+  security_test_write: true
+  task_artifact_write: true
+  shell: security_analysis
+  production_access: false
+  forbidden: [destructive_exploitation, unauthorized_external_scanning]
+documenter:
+  production_code_write: false
+  docs_write: true
+  task_artifact_write: true
+  shell: restricted
+  production_access: false
+release:
+  production_code_write: false
+  shell: quality_gates
+  production_access: false
+  may_merge_or_deploy: false

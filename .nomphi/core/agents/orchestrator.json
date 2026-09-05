@@ -1,0 +1,13 @@
+{
+  "role": "orchestrator",
+  "model_binding": "orchestrator",
+  "inputs": [
+    "task state",
+    "workflow/routing/gates",
+    "project profile"
+  ],
+  "outputs": [
+    "state.json",
+    "handoff-*.md"
+  ]
+}

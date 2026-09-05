@@ -1,0 +1,28 @@
+version: 2
+
+states:
+  - NEW
+  - PLANNING
+  - SPEC_READY
+  - SECURITY_DESIGN
+  - SECURITY_DESIGN_READY
+  - IMPLEMENTING
+  - IMPLEMENTED
+  - VERIFYING
+  - VERIFICATION_REJECTED
+  - VERIFICATION_ACCEPTED
+  - SECURITY_AUDIT
+  - SECURITY_BLOCKED
+  - SECURITY_PASSED
+  - DOCUMENTING
+  - DOCUMENTED
+  - RELEASE_GATE
+  - RELEASE_BLOCKED
+  - RELEASED
+
+terminal_states: [RELEASED]
+
+principles:
+  - deterministic_rules_override_llm_routing
+  - no_agent_self_approves_its_own_production_code
+  - project_extensions_may_strengthen_but_not_silently_weaken_core_gates

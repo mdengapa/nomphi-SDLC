@@ -1,0 +1,43 @@
+skills:
+  frontend-design:
+    agents: [planner, implementer, verifier]
+    triggers: [ui, frontend, screen, visual, responsive, design]
+  ux-application:
+    agents: [planner, implementer, verifier]
+    triggers: [workflow, interaction, ux, usability]
+  accessibility:
+    agents: [planner, implementer, verifier]
+    triggers: [ui, frontend, mobile]
+  react-web:
+    agents: [implementer, verifier]
+    triggers: [react, web]
+  react-native:
+    agents: [planner, implementer, verifier, security]
+    triggers: [react-native, ios, android, mobile]
+  backend-api:
+    agents: [planner, implementer, verifier, security]
+    triggers: [api, endpoint, backend, service]
+  database:
+    agents: [planner, implementer, verifier, security]
+    triggers: [database, persistence, migration]
+  testing:
+    agents: [planner, implementer, verifier]
+    triggers: [always]
+  e2e:
+    agents: [planner, verifier, release]
+    triggers: [critical_flow, integration, cross_layer]
+  performance:
+    agents: [planner, verifier]
+    triggers: [performance, latency, scale]
+  security-appsec:
+    agents: [planner, implementer, security]
+    triggers: [medium_risk_plus, security_sensitive]
+  privacy:
+    agents: [planner, security]
+    triggers: [personal_data, sensitive_data]
+  observability:
+    agents: [planner, implementer, verifier, security]
+    triggers: [logging, monitoring, errors, production_diagnostics]
+  documentation:
+    agents: [documenter]
+    triggers: [always]

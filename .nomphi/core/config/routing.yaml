@@ -1,0 +1,33 @@
+version: 2
+
+risk:
+  LOW:
+    security_design: policy_optional
+    security_audit: policy_optional
+    verifier: required
+  MEDIUM:
+    security_design: required
+    security_audit: required
+    verifier: required
+  HIGH:
+    security_design: required
+    security_audit: required
+    verifier: required
+    human_exception_for_security_blockers: required
+  CRITICAL:
+    security_design: required
+    security_audit: required
+    verifier: required
+    human_review: required
+
+return_routes:
+  verification.code_defect: implementer
+  verification.spec_defect: planner
+  verification.missing_tests: implementer
+  security.code_defect: implementer
+  security.design_defect: planner
+  security.threat_model_defect: security_design
+  documentation.inconsistency: verifier
+  release.test_failure: implementer
+  release.security_failure: security
+  release.documentation_failure: documenter

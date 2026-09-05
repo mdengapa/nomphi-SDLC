@@ -1,0 +1,13 @@
+{
+  "role": "security",
+  "model_binding": "security",
+  "inputs": [
+    "spec.md",
+    "project security context",
+    "diff when auditing"
+  ],
+  "outputs": [
+    "threat-model.md",
+    "security-report.md"
+  ]
+}

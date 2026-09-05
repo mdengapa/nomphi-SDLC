@@ -1,0 +1,11 @@
+test_bootstrap_does_not_copy_examples (test_nomphi.BootstrapTests.test_bootstrap_does_not_copy_examples) ... ok
+test_blank_project_profile_exists (test_nomphi.CoreBoundaryTests.test_blank_project_profile_exists) ... ok
+test_core_contains_no_known_project_names (test_nomphi.CoreBoundaryTests.test_core_contains_no_known_project_names) ... ok
+test_examples_not_inside_core (test_nomphi.CoreBoundaryTests.test_examples_not_inside_core) ... ok
+test_required_manifests (test_nomphi.CoreBoundaryTests.test_required_manifests) ... ok
+test_transition_config (test_nomphi.CoreBoundaryTests.test_transition_config) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.212s
+
+OK

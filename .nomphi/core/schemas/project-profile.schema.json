@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Nomphi Project Profile",
+  "type": "object",
+  "required": [
+    "project_id",
+    "name",
+    "project_type",
+    "default_risk",
+    "stack",
+    "mandatory_skills"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project_type": {
+      "type": "string"
+    },
+    "default_risk": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ]
+    },
+    "stack": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "mandatory_skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risk_raise_signals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "documentation_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

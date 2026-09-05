@@ -1,0 +1,35 @@
+{
+  "project_id": "CUADRA",
+  "name": "CUADRA",
+  "project_type": "fullstack-web-mobile",
+  "default_risk": "HIGH",
+  "stack": [
+    "TypeScript",
+    "Next.js",
+    "React Native",
+    "PostgreSQL",
+    "Drizzle"
+  ],
+  "mandatory_skills": [
+    "testing",
+    "e2e",
+    "frontend-design",
+    "ux-application",
+    "react-web",
+    "react-native",
+    "backend-api",
+    "database",
+    "security-appsec",
+    "privacy"
+  ],
+  "risk_raise_signals": [
+    "schedule_publication",
+    "absence_repair",
+    "employee_message",
+    "employee_assignment"
+  ],
+  "documentation_paths": [
+    "README.md",
+    "docs/"
+  ]
+}

@@ -1,5 +1,7 @@
 # Technical Specification
 
+Status: PENDING
+
 ## Objective
 ## Existing context
 ## Scope

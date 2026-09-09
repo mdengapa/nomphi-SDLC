@@ -6,8 +6,7 @@
       "name": "Ollama (local)",
       "options": { "baseURL": "http://localhost:11434/v1" },
       "models": {
-        "qwen3:14b": { "name": "Qwen3 14B — Orchestrator" },
-        "qwen3-coder:30b": { "name": "Qwen3 Coder 30B — Implementer/Documenter" }
+        "qwen3-coder:30b": { "name": "Qwen3 Coder 30B — Orchestrator/Implementer/Documenter" }
       }
     }
   },

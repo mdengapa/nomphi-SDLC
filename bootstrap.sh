@@ -32,6 +32,7 @@ cp -R "$HERE/.nomphi/project" "$TARGET/.nomphi/project"
 mkdir -p "$TARGET/.nomphi/tasks"
 cp -R "$HERE/.opencode/agents" "$TARGET/.opencode/agents"
 cp "$HERE/scripts/nomphi.py" "$TARGET/scripts/nomphi.py"
+cp "$HERE/scripts/nomphi_agent.py" "$TARGET/scripts/nomphi_agent.py"
 cp "$HERE/scripts/activate_opencode_agents.py" "$TARGET/scripts/activate_opencode_agents.py"
 cp "$HERE/AGENTS.nomphi.md" "$TARGET/AGENTS.nomphi.md"
 cp "$HERE/opencode.jsonc.example" "$TARGET/opencode.jsonc.example"
@@ -40,4 +41,5 @@ python3 "$TARGET/scripts/nomphi.py" project-init --id "$ID" --name "$NAME" --typ
 
 echo "Installed Nomphi core into $TARGET"
 echo "Next: complete $TARGET/.nomphi/project/ before the first real task."
+echo "Autonomous orchestrators must use scripts/nomphi_agent.py for workflow control."
 echo "AGENTS.nomphi.md is intentionally not merged into an existing AGENTS.md automatically."

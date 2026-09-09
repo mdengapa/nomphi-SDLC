@@ -130,7 +130,7 @@ class BootstrapTests(unittest.TestCase):
             spec.write_text('''# Technical Specification\n\nStatus: COMPLETE\n\n## Evidence / grounding\n- `AGENTS.nomphi.md`\n\n## Objective\nValidate project identifiers.\n\n## Scope\nPROPOSED: add validation.\n\n## Proposed changes\nPROPOSED: pure validation helper.\n\n## Unknowns / decisions required\nNone.\n\n## Acceptance criteria\n- [x] Invalid values are rejected.\n''')
             r=subprocess.run(agent+['advance','TEST-001'],cwd=target,capture_output=True,text=True)
             self.assertNotEqual(r.returncode,0)
-            self.assertIn('completed checkbox',r.stderr+r.stdout)
+            self.assertIn('must not contain completed [x] checkboxes',r.stderr+r.stdout)
 
     def test_planner_rejects_invented_repository_path(self):
         with tempfile.TemporaryDirectory() as td:
@@ -141,6 +141,6 @@ class BootstrapTests(unittest.TestCase):
             spec.write_text('''# Technical Specification\n\nStatus: COMPLETE\n\n## Evidence / grounding\n- `AGENTS.nomphi.md`\n\n## Objective\nValidate project identifiers.\n\n## Scope\nAdd validation.\n\n## Files/modules likely affected\n- `src/services/fake-validator.ts`\n\n## Proposed changes\nPROPOSED: validation helper.\n\n## Unknowns / decisions required\nNone.\n\n## Acceptance criteria\n- [ ] Invalid values are rejected.\n''')
             r=subprocess.run(agent+['advance','TEST-001'],cwd=target,capture_output=True,text=True)
             self.assertNotEqual(r.returncode,0)
-            self.assertIn('path does not exist',r.stderr+r.stdout)
+            self.assertIn('nonexistent path must be marked PROPOSED',r.stderr+r.stdout)
 
 if __name__=='__main__': unittest.main()

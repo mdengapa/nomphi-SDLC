@@ -5,7 +5,6 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 import json
 import re
-import sys
 
 import nomphi
 
@@ -21,23 +20,74 @@ def fail(message: str) -> None:
     raise SystemExit(message)
 
 
-def spec_has_substance(task_id: str) -> bool:
+def section(text: str, heading: str) -> str:
+    pattern = rf'^## {re.escape(heading)}\s*$\n(.*?)(?=^## |\Z)'
+    m = re.search(pattern, text, flags=re.MULTILINE | re.DOTALL)
+    return m.group(1).strip() if m else ''
+
+
+def spec_grounding_issues(task_id: str) -> list[str]:
     path = nomphi.td(task_id) / 'spec.md'
     if not path.is_file():
-        return False
+        return ['missing spec.md']
     text = path.read_text(errors='replace')
+    issues: list[str] = []
+
     if 'Status: COMPLETE' not in text:
-        return False
+        issues.append('spec status is not COMPLETE')
+    if re.search(r'^\s*- \[x\]', text, flags=re.MULTILINE | re.IGNORECASE):
+        issues.append('planning spec must not contain completed [x] checkboxes')
+
+    evidence = section(text, 'Evidence / grounding')
+    if not evidence or evidence.strip() in {'-', '- TBD'}:
+        issues.append('Evidence / grounding is empty')
+
+    evidence_paths: set[str] = set()
+    for token in re.findall(r'`([^`]+)`', evidence):
+        candidate = token.strip()
+        if '/' in candidate or candidate.endswith(('.py','.ts','.tsx','.js','.json','.md','.yaml','.yml')):
+            evidence_paths.add(candidate)
+            if not (ROOT / candidate).exists():
+                issues.append(f'evidence path does not exist: {candidate}')
+
+    # Any concrete repository path asserted elsewhere must either exist or be explicitly proposed.
+    for line in text.splitlines():
+        if line.startswith('## Evidence / grounding'):
+            continue
+        for token in re.findall(r'`([^`]+)`', line):
+            candidate = token.strip()
+            looks_like_path = '/' in candidate or candidate.endswith(('.py','.ts','.tsx','.js','.json','.md','.yaml','.yml'))
+            if not looks_like_path:
+                continue
+            if (ROOT / candidate).exists() or candidate in evidence_paths:
+                continue
+            if 'PROPOSED:' not in line:
+                issues.append(f'nonexistent path must be marked PROPOSED: {candidate}')
+
+    unknowns = section(text, 'Unknowns / decisions required')
+    if 'UNKNOWN:' in unknowns and 'Status: COMPLETE' in text:
+        material_words = ('architecture','invariant','contract','schema','endpoint','persistence','security','auth','migration')
+        if any(word in unknowns.lower() for word in material_words):
+            issues.append('material UNKNOWN requires Status: PENDING and HUMAN_DECISION_REQUIRED')
+
     template = nomphi.TEMPLATES / 'spec.md'
     if template.is_file():
         baseline = template.read_text(errors='replace')
         normalized = text.replace('Status: COMPLETE', 'Status: PENDING')
         if normalized.strip() == baseline.strip():
-            return False
+            issues.append('spec is unchanged from template')
+
     body = re.sub(r'^#.*$', '', text, flags=re.MULTILINE)
     body = re.sub(r'^Status:\s*COMPLETE\s*$', '', body, flags=re.MULTILINE)
     body = re.sub(r'^- \[ \]\s*$', '', body, flags=re.MULTILINE)
-    return len(re.sub(r'\s+', '', body)) >= 80
+    if len(re.sub(r'\s+', '', body)) < 120:
+        issues.append('spec lacks substantive content')
+
+    return sorted(set(issues))
+
+
+def spec_has_substance(task_id: str) -> bool:
+    return not spec_grounding_issues(task_id)
 
 
 def expected_agent(s: dict) -> str | None:
@@ -96,8 +146,9 @@ def inspect_task(task_id: str) -> dict:
     s = nomphi.state(task_id)
     target, blocked = next_transition(s)
     requirements: list[str] = []
-    if s['state'] == 'PLANNING' and not spec_has_substance(task_id):
-        requirements.append('complete spec.md with Status: COMPLETE and substantive content')
+    if s['state'] == 'PLANNING':
+        for issue in spec_grounding_issues(task_id):
+            requirements.append('spec: ' + issue)
     for name in nomphi.PREREQ.get((s['state'], target), []) if target else []:
         if not nomphi.ready(task_id, name):
             requirements.append(f'complete {name}')
@@ -122,8 +173,6 @@ def command_advance(args: Namespace) -> None:
         fail('HUMAN_DECISION_REQUIRED: ' + info['blocked_reason'])
     if info['requirements']:
         fail('ADVANCE_BLOCKED: ' + '; '.join(info['requirements']))
-    if info['state'] == 'PLANNING' and not spec_has_substance(args.task_id):
-        fail('ADVANCE_BLOCKED: spec.md is not substantively complete')
     target = info['next_transition']
     if not target:
         fail('HUMAN_DECISION_REQUIRED: no deterministic next transition')

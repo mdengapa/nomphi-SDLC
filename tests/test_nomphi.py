@@ -143,4 +143,15 @@ class BootstrapTests(unittest.TestCase):
             self.assertNotEqual(r.returncode,0)
             self.assertIn('nonexistent path must be marked PROPOSED',r.stderr+r.stdout)
 
+    def test_planner_ignores_markdown_heading_reference_as_path(self):
+        with tempfile.TemporaryDirectory() as td:
+            target=self._bootstrap(td); agent=self._agent_cli(target)
+            subprocess.run(agent+['create','TEST-001','--title','Smoke task','--risk','LOW'],cwd=target,check=True,capture_output=True,text=True)
+            subprocess.run(agent+['advance','TEST-001'],cwd=target,check=True,capture_output=True,text=True)
+            spec=target/'.nomphi/tasks/TEST-001/spec.md'
+            spec.write_text('''# Technical Specification\n\nStatus: COMPLETE\n\n## Evidence / grounding\n- `AGENTS.nomphi.md`\n\n## Existing context\nOnly state facts supported by `## Evidence / grounding`.\n\n## Objective\nValidate project identifiers.\n\n## Scope\nPROPOSED: add validation with no side effects.\n\n## Proposed changes\nPROPOSED: validation helper; exact path chosen after repository inspection.\n\n## Unknowns / decisions required\nNone.\n\n## Acceptance criteria\n- [ ] Valid identifiers are accepted.\n- [ ] Invalid identifiers are rejected.\n\n## Definition of Done\n- [ ] Implementation and tests pass.\n''')
+            r=subprocess.run(agent+['advance','TEST-001'],cwd=target,capture_output=True,text=True)
+            self.assertEqual(r.returncode,0,r.stderr)
+            self.assertEqual(json.loads((target/'.nomphi/tasks/TEST-001/state.json').read_text())['state'],'SPEC_READY')
+
 if __name__=='__main__': unittest.main()

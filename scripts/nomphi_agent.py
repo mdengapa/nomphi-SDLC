@@ -14,6 +14,7 @@ ACCEPT_VERDICTS = {'ACCEPT', 'ACCEPT_WITH_MINOR_ISSUES'}
 REJECT_VERDICTS = {'REJECT', 'REJECTED', 'FAIL'}
 SECURITY_PASS = {'PASS', 'PASS_WITH_LOW_MEDIUM_FINDINGS'}
 SECURITY_BLOCK = {'BLOCK', 'BLOCKED', 'FAIL'}
+PATH_EXTENSIONS = ('.py','.ts','.tsx','.js','.jsx','.json','.md','.yaml','.yml','.toml','.sh')
 
 
 def fail(message: str) -> None:
@@ -24,6 +25,31 @@ def section(text: str, heading: str) -> str:
     pattern = rf'^## {re.escape(heading)}\s*$\n(.*?)(?=^## |\Z)'
     m = re.search(pattern, text, flags=re.MULTILINE | re.DOTALL)
     return m.group(1).strip() if m else ''
+
+
+def looks_like_repo_path(candidate: str) -> bool:
+    """Recognize markdown code spans that plausibly denote repository paths.
+
+    Avoid false positives from markdown headings, regex snippets, prose labels and
+    template references such as `## Evidence / grounding`.
+    """
+    candidate = candidate.strip()
+    if not candidate or candidate.startswith(('#', 'Status:', 'PROPOSED:', 'UNKNOWN:')):
+        return False
+    if '\n' in candidate or '\r' in candidate:
+        return False
+    if any(ch in candidate for ch in '*?[]{}()^$|'):
+        return False
+    if candidate.startswith('/') and candidate.endswith('/') and len(candidate) > 1:
+        return False
+    if candidate.endswith(PATH_EXTENSIONS):
+        return True
+    if '/' not in candidate:
+        return False
+    parts = candidate.split('/')
+    if any(not part or part in {'.', '..'} for part in parts):
+        return False
+    return all(re.fullmatch(r'[A-Za-z0-9._@+-]+', part) for part in parts)
 
 
 def spec_grounding_issues(task_id: str) -> list[str]:
@@ -45,19 +71,16 @@ def spec_grounding_issues(task_id: str) -> list[str]:
     evidence_paths: set[str] = set()
     for token in re.findall(r'`([^`]+)`', evidence):
         candidate = token.strip()
-        if '/' in candidate or candidate.endswith(('.py','.ts','.tsx','.js','.json','.md','.yaml','.yml')):
+        if looks_like_repo_path(candidate):
             evidence_paths.add(candidate)
             if not (ROOT / candidate).exists():
                 issues.append(f'evidence path does not exist: {candidate}')
 
     # Any concrete repository path asserted elsewhere must either exist or be explicitly proposed.
     for line in text.splitlines():
-        if line.startswith('## Evidence / grounding'):
-            continue
         for token in re.findall(r'`([^`]+)`', line):
             candidate = token.strip()
-            looks_like_path = '/' in candidate or candidate.endswith(('.py','.ts','.tsx','.js','.json','.md','.yaml','.yml'))
-            if not looks_like_path:
+            if not looks_like_repo_path(candidate):
                 continue
             if (ROOT / candidate).exists() or candidate in evidence_paths:
                 continue

@@ -107,13 +107,35 @@ class BootstrapTests(unittest.TestCase):
             self.assertIn('ADVANCE_BLOCKED',r.stderr+r.stdout)
             self.assertEqual(json.loads((target/'.nomphi/tasks/TEST-001/state.json').read_text())['state'],'PLANNING')
 
+    def test_planner_rejects_completed_checkboxes(self):
+        with tempfile.TemporaryDirectory() as td:
+            target=self._bootstrap(td); agent=self._agent_cli(target)
+            subprocess.run(agent+['create','TEST-001','--title','Smoke task','--risk','LOW'],cwd=target,check=True,capture_output=True,text=True)
+            subprocess.run(agent+['advance','TEST-001'],cwd=target,check=True,capture_output=True,text=True)
+            spec=target/'.nomphi/tasks/TEST-001/spec.md'
+            spec.write_text('''# Technical Specification\n\nStatus: COMPLETE\n\n## Evidence / grounding\n- `README.md`\n\n## Objective\nValidate project identifiers.\n\n## Existing context\nThe repository contains its documented Nomphi workflow.\n\n## Proposed changes\nPROPOSED: add pure identifier validation behavior without persistence assumptions.\n\n## Unknowns / decisions required\nNone.\n\n## Scope\nValidation only.\n\n## Acceptance criteria\n- [x] Valid identifiers are accepted.\n''')
+            r=subprocess.run(agent+['advance','TEST-001'],cwd=target,capture_output=True,text=True)
+            self.assertNotEqual(r.returncode,0)
+            self.assertIn('completed [x] checkboxes',r.stderr+r.stdout)
+
+    def test_planner_rejects_invented_repository_path(self):
+        with tempfile.TemporaryDirectory() as td:
+            target=self._bootstrap(td); agent=self._agent_cli(target)
+            subprocess.run(agent+['create','TEST-001','--title','Smoke task','--risk','LOW'],cwd=target,check=True,capture_output=True,text=True)
+            subprocess.run(agent+['advance','TEST-001'],cwd=target,check=True,capture_output=True,text=True)
+            spec=target/'.nomphi/tasks/TEST-001/spec.md'
+            spec.write_text('''# Technical Specification\n\nStatus: COMPLETE\n\n## Evidence / grounding\n- `README.md`\n\n## Objective\nValidate project identifiers.\n\n## Existing context\nThe repository contains its documented Nomphi workflow.\n\n## Proposed changes\nAdd validation.\n\n## Unknowns / decisions required\nNone.\n\n## Scope\nValidation only.\n\n## Files/modules likely affected\n- `src/services/project-validator.ts`\n\n## Acceptance criteria\n- [ ] Valid identifiers are accepted.\n''')
+            r=subprocess.run(agent+['advance','TEST-001'],cwd=target,capture_output=True,text=True)
+            self.assertNotEqual(r.returncode,0)
+            self.assertIn('nonexistent path must be marked PROPOSED',r.stderr+r.stdout)
+
     def test_semantic_advance_and_route_low_risk(self):
         with tempfile.TemporaryDirectory() as td:
             target=self._bootstrap(td); agent=self._agent_cli(target)
             subprocess.run(agent+['create','TEST-001','--title','Smoke task','--risk','LOW'],cwd=target,check=True,capture_output=True,text=True)
             subprocess.run(agent+['advance','TEST-001'],cwd=target,check=True,capture_output=True,text=True)
             spec=target/'.nomphi/tasks/TEST-001/spec.md'
-            spec.write_text('''# Technical Specification\n\nStatus: COMPLETE\n\n## Objective\nValidate project identifiers before persistence.\n\n## Scope\nAdd a pure validation helper with no side effects.\n\n## Acceptance criteria\n- Valid uppercase identifiers are accepted.\n- Invalid characters are rejected.\n- Empty input is rejected.\n\n## Tests required\nUnit tests cover valid, invalid, empty, and boundary cases.\n''')
+            spec.write_text('''# Technical Specification\n\nStatus: COMPLETE\n\n## Evidence / grounding\n- `README.md`\n- `.nomphi/core/config/transitions.json`\n\n## Objective\nDefine a pure validation rule for project identifier input.\n\n## Existing context\nThe repository already contains project identifiers in Nomphi task and project metadata.\n\n## Proposed changes\nPROPOSED: add validation behavior at the narrowest existing project-identifier boundary identified during implementation.\n\n## Unknowns / decisions required\nNone material for this bounded smoke test.\n\n## Scope\nValidate identifier syntax only; no persistence or uniqueness behavior.\n\n## Out of scope\nUI, API endpoints, persistence, uniqueness and migrations.\n\n## Acceptance criteria\n- [ ] Valid identifiers are accepted.\n- [ ] Invalid characters are rejected.\n- [ ] Empty input is rejected.\n\n## Tests required\n### Unit\n- [ ] valid, invalid, empty and boundary cases.\n\n## Definition of Done\n- [ ] Implementation matches this specification.\n- [ ] Required tests pass.\n''')
             r=subprocess.run(agent+['advance','TEST-001'],cwd=target,capture_output=True,text=True)
             self.assertEqual(r.returncode,0,r.stderr)
             self.assertEqual(json.loads((target/'.nomphi/tasks/TEST-001/state.json').read_text())['state'],'SPEC_READY')

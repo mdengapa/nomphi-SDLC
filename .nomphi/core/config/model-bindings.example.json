@@ -6,7 +6,7 @@
   },
   "planner": {
     "provider": "openai",
-    "model": "SET_CURRENT_OPENAI_REASONING_OR_CODE_MODEL",
+    "model": "gpt-5.6-sol#high",
     "purpose": "architecture and evidence-grounded specification"
   },
   "implementer": {
@@ -16,7 +16,7 @@
   },
   "verifier": {
     "provider": "openai",
-    "model": "SET_CURRENT_OPENAI_CODE_MODEL",
+    "model": "gpt-5.3-codex-spark#medium",
     "purpose": "independent verification and adversarial testing"
   },
   "security": {

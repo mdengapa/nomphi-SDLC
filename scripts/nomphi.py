@@ -9,18 +9,22 @@ CORE=ROOT/'.nomphi'/'core'; PROJECT=ROOT/'.nomphi'/'project'; TASKS=ROOT/'.nomph
 TEMPLATES=CORE/'templates'; TRANSITIONS=CORE/'config'/'transitions.json'
 RISKS={'LOW','MEDIUM','HIGH','CRITICAL'}
 TASK_ID=re.compile(r'^[A-Z][A-Z0-9_-]{1,63}$')
+PROJECT_ID=re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
 
 def now(): return datetime.now(timezone.utc).isoformat()
 def read_json(p): return json.loads(Path(p).read_text())
 def write_json(p,o): Path(p).write_text(json.dumps(o,indent=2,ensure_ascii=False)+'\n')
 def fail(m): raise SystemExit(m)
 
+def valid_project_id(value):
+    return isinstance(value,str) and PROJECT_ID.fullmatch(value) is not None
+
 def validate_adapter():
     names=['project-profile.json','architecture.md','domain.md','invariants.md','conventions.md','security-boundaries.md','commands.json']
     missing=[n for n in names if not (PROJECT/n).is_file()]
     if missing: fail('HUMAN_DECISION_REQUIRED: incomplete project adapter: '+', '.join(missing))
     p=read_json(PROJECT/'project-profile.json')
-    if p.get('project_id') in (None,'','REPLACE_ME'):
+    if not valid_project_id(p.get('project_id')):
         fail('HUMAN_DECISION_REQUIRED: project adapter is not initialized; use project-init explicitly')
     if p.get('default_risk','MEDIUM') not in RISKS: fail('Invalid default_risk')
     if not isinstance(read_json(PROJECT/'commands.json'),dict): fail('Invalid commands.json')
@@ -33,14 +37,21 @@ def valid_task(t):
 def td(t): return TASKS/valid_task(t)
 def sp(t): return td(t)/'state.json'
 def state(t):
+    pr=validate_adapter()
     if not sp(t).is_file(): fail(f'Unknown task: {t}')
     s=read_json(sp(t))
     if s.get('task_id')!=t: fail('Corrupt task state')
+    if not valid_project_id(s.get('project_id')) or s['project_id']!=pr['project_id']:
+        fail('Corrupt task state project_id')
     return s
 def save(t,s): write_json(sp(t),s)
 
 def init_project(a):
     p=read_json(PROJECT/'project-profile.json')
+    if not valid_project_id(a.id):
+        fail('HUMAN_DECISION_REQUIRED: project_id must match ^[a-z0-9]+(?:-[a-z0-9]+)*$')
+    if valid_project_id(p.get('project_id')) and p['project_id']!=a.id:
+        fail('HUMAN_DECISION_REQUIRED: established project_id is immutable')
     p.update(project_id=a.id,name=a.name,project_type=a.type,default_risk=a.default_risk)
     write_json(PROJECT/'project-profile.json',p); validate_adapter()
     print(f'Initialized project adapter: {a.id} — {a.name}')

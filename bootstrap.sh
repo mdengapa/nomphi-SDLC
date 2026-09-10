@@ -37,6 +37,8 @@ cp "$HERE/scripts/activate_opencode_agents.py" "$TARGET/scripts/activate_opencod
 cp "$HERE/AGENTS.nomphi.md" "$TARGET/AGENTS.nomphi.md"
 cp "$HERE/opencode.jsonc.example" "$TARGET/opencode.jsonc.example"
 
+# A copied adapter must not retain the donor's immutable identity.
+python3 -c 'import json, sys; p = sys.argv[1]; data = json.load(open(p)); data["project_id"] = "REPLACE_ME"; open(p, "w").write(json.dumps(data, indent=2, ensure_ascii=False) + "\n")' "$TARGET/.nomphi/project/project-profile.json"
 python3 "$TARGET/scripts/nomphi.py" project-init --id "$ID" --name "$NAME" --type "$TYPE"
 
 echo "Installed Nomphi core into $TARGET"

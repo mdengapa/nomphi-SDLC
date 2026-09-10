@@ -1,7 +1,8 @@
 ---
 description: Independently verifies correctness and creates adversarial tests with GPT-5.3 Codex Spark at medium reasoning effort.
 mode: subagent
-model: openai/gpt-5.3-codex-spark#medium
+model: openai/gpt-5.3-codex-spark
+reasoningEffort: medium
 permission:
   edit: ask
   bash: allow

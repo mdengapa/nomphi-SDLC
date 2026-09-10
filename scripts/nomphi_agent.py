@@ -14,6 +14,8 @@ ACCEPT_VERDICTS = {'ACCEPT', 'ACCEPT_WITH_MINOR_ISSUES'}
 REJECT_VERDICTS = {'REJECT', 'REJECTED', 'FAIL'}
 SECURITY_PASS = {'PASS', 'PASS_WITH_LOW_MEDIUM_FINDINGS'}
 SECURITY_BLOCK = {'BLOCK', 'BLOCKED', 'FAIL'}
+RELEASE_PASS = {'PASS'}
+RELEASE_BLOCK = {'BLOCK', 'BLOCKED', 'FAIL'}
 PATH_EXTENSIONS = ('.py','.ts','.tsx','.js','.jsx','.json','.md','.yaml','.yml','.toml','.sh')
 
 
@@ -159,7 +161,12 @@ def next_transition(s: dict) -> tuple[str | None, str | None]:
     if state in {'SECURITY_BLOCKED', 'RELEASE_BLOCKED'}:
         return None, 'routing requires ownership classification'
     if state == 'RELEASE_GATE':
-        return None, 'release requires explicit gate execution'
+        verdict = nomphi.verdict(nomphi.td(s['task_id']) / 'release-report.md')
+        if verdict in RELEASE_PASS:
+            return 'RELEASED', None
+        if verdict in RELEASE_BLOCK:
+            return 'RELEASE_BLOCKED', None
+        return None, 'release verdict is missing or ambiguous'
     if state == 'RELEASED':
         return None, 'task is terminal'
     return None, f'no semantic transition defined for {state}'

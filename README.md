@@ -104,10 +104,12 @@ Project rules may become stricter than the core. They may not silently relax a c
 ## Install into a project
 
 ```bash
-./bootstrap.sh /path/to/repository --name "My Project" --id MYPROJECT
+./bootstrap.sh /path/to/repository --name "My Project" --id my-project
 ```
 
-The bootstrap copies the reusable core and initializes a blank project adapter. It does **not** copy any example project.
+`--id` is the human-supplied canonical project identifier. It must exactly match `^[a-z0-9]+(?:-[a-z0-9]+)*$`; it is not derived from the project name, repository, directory, or task ID. Bootstrap copies the reusable core and project adapter, marks only the target copy's identifier uninitialized, and then explicitly initializes it from `--id`. It does not modify the donor adapter or copy an example project.
+
+After initialization, the identifier is immutable: `project-init` accepts the same exact ID for metadata updates but rejects a different ID. New task state copies the profile identifier exactly, and task operations reject state whose identifier is missing, malformed, or differs from the current profile.
 
 Then edit:
 
@@ -140,7 +142,7 @@ Task artifacts are stored under `.nomphi/tasks/NOM-001/`.
 
 ## Examples
 
-`examples/` contains optional project adapters showing how the generic core can be specialized. They are **not part of the Nomphi core** and are never installed by default.
+`examples/` contains optional project adapters showing how the generic core can be specialized. They are **not part of the Nomphi core** and are never installed by default. Their profile identifiers are compatibility examples, not identifiers for an active project; an active adapter requires an explicit human-supplied identifier in the approved format.
 
 ## Non-goals
 

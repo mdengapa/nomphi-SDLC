@@ -1,0 +1,84 @@
+{
+  "task_id": "NOM-TEST-007",
+  "project_id": "nomphi-sdlc",
+  "title": "Validate project identifier",
+  "risk": "LOW",
+  "state": "RELEASED",
+  "iterations": {
+    "planning": 1,
+    "security_design": 0,
+    "implementation": 1,
+    "verification": 1,
+    "security_audit": 0,
+    "documentation": 1,
+    "release": 1
+  },
+  "history": [
+    {
+      "at": "2026-09-09T20:58:56.572292+00:00",
+      "from": null,
+      "to": "NEW",
+      "reason": "task initialized"
+    },
+    {
+      "at": "2026-09-09T20:58:59.005323+00:00",
+      "from": "NEW",
+      "to": "PLANNING",
+      "reason": "semantic advance"
+    },
+    {
+      "at": "2026-09-10T09:58:09.948130+00:00",
+      "from": "PLANNING",
+      "to": "SPEC_READY",
+      "reason": "semantic advance"
+    },
+    {
+      "at": "2026-09-10T09:59:12.703054+00:00",
+      "from": "SPEC_READY",
+      "to": "IMPLEMENTING",
+      "reason": "semantic advance"
+    },
+    {
+      "at": "2026-09-10T20:22:15.151212+00:00",
+      "from": "IMPLEMENTING",
+      "to": "IMPLEMENTED",
+      "reason": "semantic advance"
+    },
+    {
+      "at": "2026-09-10T20:22:26.416450+00:00",
+      "from": "IMPLEMENTED",
+      "to": "VERIFYING",
+      "reason": "semantic advance"
+    },
+    {
+      "at": "2026-09-10T20:28:38.182698+00:00",
+      "from": "VERIFYING",
+      "to": "VERIFICATION_ACCEPTED",
+      "reason": "semantic advance"
+    },
+    {
+      "at": "2026-09-10T20:29:11.892611+00:00",
+      "from": "VERIFICATION_ACCEPTED",
+      "to": "DOCUMENTING",
+      "reason": "semantic advance"
+    },
+    {
+      "at": "2026-09-10T20:35:14.095393+00:00",
+      "from": "DOCUMENTING",
+      "to": "DOCUMENTED",
+      "reason": "semantic advance"
+    },
+    {
+      "at": "2026-09-10T20:37:17.777386+00:00",
+      "from": "DOCUMENTED",
+      "to": "RELEASE_GATE",
+      "reason": "semantic advance"
+    },
+    {
+      "at": "2026-09-10T20:46:39.966880+00:00",
+      "from": "RELEASE_GATE",
+      "to": "RELEASED",
+      "reason": "semantic advance"
+    }
+  ]
+}

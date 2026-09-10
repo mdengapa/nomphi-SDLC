@@ -1,7 +1,8 @@
 ---
 description: Implements an approved Nomphi task with minimal scope and continuous local tests.
 mode: subagent
-model: ollama/qwen3-coder:30b
+model: openai/gpt-5.6-terra
+reasoningEffort: medium
 permission:
   edit: allow
   bash: allow

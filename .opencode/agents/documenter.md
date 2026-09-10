@@ -1,7 +1,8 @@
 ---
 description: Updates durable project documentation after accepted implementation and security review.
 mode: subagent
-model: ollama/qwen3-coder:30b
+model: openai/gpt-5.6-terra
+reasoningEffort: medium
 permission:
   bash: deny
 ---

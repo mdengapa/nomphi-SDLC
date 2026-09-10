@@ -1,7 +1,8 @@
 ---
 description: Nomphi workflow orchestrator. Routes work and enforces state; never implements or authors role-owned artifacts.
 mode: primary
-model: ollama/qwen3-coder:30b
+model: openai/gpt-5.6-terra
+reasoningEffort: medium
 permission:
   edit: deny
   bash: ask

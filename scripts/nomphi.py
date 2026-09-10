@@ -66,11 +66,23 @@ def next_stage(a):
     m={'NEW':'PLANNING','PLANNING':'SPEC_READY after completed spec.md','SPEC_READY':'SECURITY_DESIGN' if risk!='LOW' else 'IMPLEMENTING','SECURITY_DESIGN':'SECURITY_DESIGN_READY after completed threat-model.md','SECURITY_DESIGN_READY':'IMPLEMENTING','IMPLEMENTING':'IMPLEMENTED after implementation-report.md','IMPLEMENTED':'VERIFYING','VERIFYING':'VERIFICATION_ACCEPTED or VERIFICATION_REJECTED','VERIFICATION_REJECTED':'IMPLEMENTING','VERIFICATION_ACCEPTED':'SECURITY_AUDIT' if risk!='LOW' else 'DOCUMENTING','SECURITY_AUDIT':'SECURITY_PASSED or SECURITY_BLOCKED','SECURITY_BLOCKED':'IMPLEMENTING or PLANNING','SECURITY_PASSED':'DOCUMENTING','DOCUMENTING':'DOCUMENTED','DOCUMENTED':'RELEASE_GATE','RELEASE_GATE':'RELEASED only after passing gate','RELEASE_BLOCKED':'route to owning stage','RELEASED':'terminal'}
     print(m.get(st,'unknown'))
 
-def ready(t,n):
-    p=td(t)/n
-    if not p.is_file() or p.stat().st_size<20: return False
-    x=p.read_text(errors='replace')
-    return not any(marker in x for marker in ('PENDING','REPLACE_ME'))
+def ready(t, n):
+    p = td(t) / n
+    if not p.is_file() or p.stat().st_size < 20:
+        return False
+
+    x = p.read_text(errors='replace')
+
+    if n == 'spec.md':
+        return bool(
+            re.search(
+                r'^Status:\s*COMPLETE\s*$',
+                x,
+                flags=re.MULTILINE,
+            )
+        )
+
+    return not any(marker in x for marker in ('PENDING', 'REPLACE_ME'))
 
 PREREQ={('PLANNING','SPEC_READY'):['spec.md'],('SECURITY_DESIGN','SECURITY_DESIGN_READY'):['threat-model.md'],('IMPLEMENTING','IMPLEMENTED'):['implementation-report.md'],('VERIFYING','VERIFICATION_ACCEPTED'):['verification-report.md'],('VERIFYING','VERIFICATION_REJECTED'):['verification-report.md'],('SECURITY_AUDIT','SECURITY_PASSED'):['security-report.md'],('SECURITY_AUDIT','SECURITY_BLOCKED'):['security-report.md'],('DOCUMENTING','DOCUMENTED'):['documentation-report.md'],('RELEASE_GATE','RELEASED'):['release-report.md']}
 

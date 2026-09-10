@@ -1,7 +1,8 @@
 ---
 description: Produces evidence-grounded bounded technical specifications with GPT-5.6 Sol at high reasoning effort.
 mode: subagent
-model: openai/gpt-5.6-sol#high
+model: openai/gpt-5.6-sol
+reasoningEffort: high
 permission:
   edit: deny
   bash: ask

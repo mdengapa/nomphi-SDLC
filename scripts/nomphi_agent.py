@@ -27,11 +27,12 @@ def section(text: str, heading: str) -> str:
     return m.group(1).strip() if m else ''
 
 
-def looks_like_repo_path(candidate: str) -> bool:
+def looks_like_repo_path(candidate: str, *, allow_root_file: bool = False) -> bool:
     """Recognize markdown code spans that plausibly denote repository paths.
 
-    Avoid false positives from markdown headings, regex snippets, prose labels and
-    template references such as `## Evidence / grounding`.
+    Root-level bare filenames are only considered paths in explicit grounding
+    evidence. Elsewhere, tokens such as `state.json` are prose references and
+    must not be treated as assertions that `./state.json` exists.
     """
     candidate = candidate.strip()
     if not candidate or candidate.startswith(('#', 'Status:', 'PROPOSED:', 'UNKNOWN:')):
@@ -42,10 +43,8 @@ def looks_like_repo_path(candidate: str) -> bool:
         return False
     if candidate.startswith('/') and candidate.endswith('/') and len(candidate) > 1:
         return False
-    if candidate.endswith(PATH_EXTENSIONS):
-        return True
     if '/' not in candidate:
-        return False
+        return allow_root_file and candidate.endswith(PATH_EXTENSIONS)
     parts = candidate.split('/')
     if any(not part or part in {'.', '..'} for part in parts):
         return False
@@ -71,12 +70,14 @@ def spec_grounding_issues(task_id: str) -> list[str]:
     evidence_paths: set[str] = set()
     for token in re.findall(r'`([^`]+)`', evidence):
         candidate = token.strip()
-        if looks_like_repo_path(candidate):
+        if looks_like_repo_path(candidate, allow_root_file=True):
             evidence_paths.add(candidate)
             if not (ROOT / candidate).exists():
                 issues.append(f'evidence path does not exist: {candidate}')
 
     # Any concrete repository path asserted elsewhere must either exist or be explicitly proposed.
+    # Bare filenames are intentionally ignored here because prose often references artifacts such
+    # as `state.json` without asserting a root-level repository path.
     for line in text.splitlines():
         for token in re.findall(r'`([^`]+)`', line):
             candidate = token.strip()

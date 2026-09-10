@@ -1,7 +1,7 @@
 ---
-description: Produces evidence-grounded bounded technical specifications. Bind to the current OpenAI reasoning/code model available in OpenCode.
+description: Produces evidence-grounded bounded technical specifications with GPT-5.6 Sol at high reasoning effort.
 mode: subagent
-# model: openai/REPLACE_WITH_CURRENT_OPENAI_MODEL
+model: openai/gpt-5.6-sol#high
 permission:
   edit: deny
   bash: ask

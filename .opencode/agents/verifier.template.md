@@ -1,7 +1,7 @@
 ---
-description: Independently verifies correctness and creates adversarial tests. Bind to the current OpenAI model.
+description: Independently verifies correctness and creates adversarial tests with GPT-5.3 Codex Spark at medium reasoning effort.
 mode: subagent
-# model: openai/REPLACE_WITH_CURRENT_OPENAI_MODEL
+model: openai/gpt-5.3-codex-spark#medium
 permission:
   edit: ask
   bash: allow

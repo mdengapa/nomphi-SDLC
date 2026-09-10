@@ -1,13 +1,13 @@
 {
   "orchestrator": {
     "provider": "ollama",
-    "model": "qwen3:14b",
+    "model": "qwen3-coder:30b",
     "purpose": "routing/context preparation; deterministic engine authoritative"
   },
   "planner": {
-    "provider": "anthropic",
-    "model": "SET_CURRENT_CLAUDE_MODEL",
-    "purpose": "architecture and specification"
+    "provider": "openai",
+    "model": "SET_CURRENT_OPENAI_REASONING_OR_CODE_MODEL",
+    "purpose": "architecture and evidence-grounded specification"
   },
   "implementer": {
     "provider": "ollama",
@@ -32,7 +32,7 @@
   "release": {
     "provider": "local",
     "model": "deterministic",
-    "fallback_model": "qwen3:8b",
+    "fallback_model": "qwen3-coder:30b",
     "purpose": "release evidence only"
   }
 }

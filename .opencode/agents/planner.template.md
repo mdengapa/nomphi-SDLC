@@ -1,7 +1,7 @@
 ---
-description: Produces evidence-grounded bounded technical specifications. Bind to the current Claude model available in OpenCode.
+description: Produces evidence-grounded bounded technical specifications. Bind to the current OpenAI reasoning/code model available in OpenCode.
 mode: subagent
-# model: anthropic/REPLACE_WITH_CURRENT_CLAUDE_MODEL
+# model: openai/REPLACE_WITH_CURRENT_OPENAI_MODEL
 permission:
   edit: deny
   bash: ask

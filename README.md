@@ -12,6 +12,24 @@ Project-specific knowledge is injected through a separate project adapter under 
 
 > **Nomphi defines how software is developed. Each project defines what is being developed.**
 
+## Current baseline
+
+`NOM-TEST-007` is closed and integrated into `main`.
+
+Validated baseline:
+- workflow completed through `RELEASED`;
+- full smoke validated;
+- 30 tests passing;
+- canonical project identity contract exercised end-to-end;
+- OpenCode role bindings validated with the current frontier-model configuration.
+
+Key commits:
+- `a1b29f3` — Merge NOM-TEST-007 project identity smoke
+- `e3d7cc3` — Configure OpenCode agent model bindings
+- `ba9a263` — Complete NOM-TEST-007 project identity smoke
+
+The next framework phase is `NOM-FWK-008 — Framework Hardening`. Its purpose is to harden deterministic contracts before adding new projects or more automation. See [`docs/FRAMEWORK_HARDENING.md`](docs/FRAMEWORK_HARDENING.md).
+
 ## Scope boundary
 
 ```text
@@ -32,15 +50,15 @@ How release is gated               Project-specific skills
 
 ```mermaid
 flowchart TD
-    H[Human / Product Requirement] --> O[Orchestrator\nLocal model + deterministic engine]
-    O --> P[Planner\nClaude]
-    P --> SD[Security Design\nGemini]
-    SD --> I[Implementer\nOllama coding model]
-    I --> V[Verifier\nOpenAI / Codex]
+    H[Human / Product Requirement] --> O[Orchestrator\nDeterministic routing + bounded LLM assistance]
+    O --> P[Planner]
+    P --> SD[Security Design]
+    SD --> I[Implementer]
+    I --> V[Verifier]
     V -->|REJECT| O
-    V -->|ACCEPT| SA[Security Audit\nGemini]
+    V -->|ACCEPT| SA[Security Audit]
     SA -->|BLOCK| O
-    SA -->|PASS| D[Documenter\nOllama]
+    SA -->|PASS| D[Documenter]
     D --> R[Release Gate\nDeterministic checks]
     R -->|BLOCK| O
     R -->|PASS| G[Commit / Merge / Release]
@@ -50,15 +68,15 @@ The same Security Agent is invoked in two distinct phases: security design befor
 
 ## Roles
 
-| Role | Default model class | Responsibility |
-|---|---|---|
-| Orchestrator | Local small/medium LLM + state machine | Routing, context packaging, handoffs, state and gates |
-| Planner | Claude | Architecture, bounded specification, acceptance criteria, edge cases |
-| Security | Gemini | Threat modelling and independent AppSec audit |
-| Implementer | Ollama coding model | Implementation, local tests and bounded refactors |
-| Verifier | OpenAI/Codex | Independent correctness review and adversarial tests |
-| Documenter | Ollama coding model | Durable technical documentation |
-| Release | Deterministic engine; local LLM optional | Evidence-based final gate |
+| Role | Responsibility |
+|---|---|
+| Orchestrator | Routing, context packaging, handoffs, state and gates. Must not implement product changes. |
+| Planner | Architecture, bounded specification, acceptance criteria and edge cases. Must not implement production code. |
+| Security | Threat modelling and independent AppSec audit. |
+| Implementer | Implementation, local tests and bounded refactors within the approved spec. |
+| Verifier | Independent correctness review and adversarial tests. Must not silently repair the implementation under review. |
+| Documenter | Durable technical documentation based only on accepted behavior and required handoffs. |
+| Release | Deterministic evidence-based final gate. It cannot waive failed mandatory checks. |
 
 Model bindings are configuration, not architecture. Frontier model versions can change without modifying the workflow.
 
@@ -101,6 +119,19 @@ For a task, context is assembled in this order:
 
 Project rules may become stricter than the core. They may not silently relax a core security/release rule.
 
+## Fail-closed framework rule
+
+Nomphi must not depend on an agent voluntarily following role boundaries or reconstructing missing context.
+
+The framework must reject progression when:
+- a required handoff is absent, empty, stale or belongs to another `project_id`/`task_id`;
+- a structured readiness field is unresolved;
+- a role attempts an action outside its authority;
+- a transition is illegal for the current state;
+- release evidence does not belong to the same project/task identity or a mandatory gate has not passed.
+
+Explanatory prose containing literals such as `PENDING` or `REPLACE_ME` must not by itself determine readiness. Readiness is a structured contract.
+
 ## Install into a project
 
 ```bash
@@ -139,6 +170,8 @@ Task artifacts are stored under `.nomphi/tasks/NOM-001/`.
 ## OpenCode
 
 `.opencode/agents/` contains runtime adapters for each Nomphi role. The Nomphi manifests remain canonical. Provider-specific agent files are only adapters, so OpenCode or model changes do not redefine the engineering process.
+
+Current validated bindings are documented in [`docs/OPENCODE.md`](docs/OPENCODE.md).
 
 ## Examples
 

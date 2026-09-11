@@ -31,7 +31,7 @@ No project name, product rule, API route, visual identity or domain invariant be
 ## 2. Separation of duties
 
 ### Orchestrator
-Controls state, routes work, packages context and enforces gates. It should be mostly deterministic. An LLM may classify or summarize, but cannot override workflow constraints.
+Controls state, routes work, packages context and enforces gates. It should be mostly deterministic. An LLM may classify or summarize, but cannot override workflow constraints or implement product changes.
 
 ### Planner
 Turns a requirement into an implementation contract. It reads but does not modify production code.
@@ -46,10 +46,12 @@ Writes production code and implementation-level tests. It is not allowed to rede
 Tries to falsify the implementation. It may add verification tests but does not silently repair production code.
 
 ### Documenter
-Updates durable documentation to match accepted behavior.
+Updates durable documentation to match accepted behavior. It must not continue if its required upstream handoff/evidence is absent or invalid.
 
 ### Release Gate
-Checks evidence. It does not make product judgments or waive failed checks.
+Checks evidence. It does not make product judgments, infer missing artifacts or waive failed checks.
+
+Role boundaries are executable policy where practical. Prompt text alone is not considered sufficient enforcement for critical permissions.
 
 ## 3. State machine
 
@@ -85,6 +87,8 @@ RELEASE_GATE
  ├─ BLOCKED ──────────► owning stage
  └─ RELEASED
 ```
+
+Every transition must be declared explicitly. Direct state editing or skipped stages must not create a release-eligible task.
 
 ## 4. Risk classes
 
@@ -134,9 +138,21 @@ state.json
 handoff-*.md
 ```
 
+Required handoffs are execution contracts. The receiving stage must fail closed if a mandatory handoff is missing, empty, malformed, stale, produced by the wrong stage, or associated with a different `project_id`/`task_id`.
+
+Agents must not reconstruct missing authoritative handoffs from repository context and continue silently.
+
 Every rejection identifies the owning stage.
 
-## 7. Retry routing
+## 7. Readiness semantics
+
+Readiness is a structured property of artifacts and state.
+
+Explanatory prose is not executable state. Tokens such as `PENDING`, `REPLACE_ME`, `TODO` or `TBD` only affect readiness when they occur in contract fields explicitly defined as unresolved.
+
+Malformed or missing required readiness metadata fails closed.
+
+## 8. Retry routing
 
 - Functional code defect → Implementer.
 - Missing/incorrect verification evidence → Implementer/Verifier as appropriate.
@@ -145,8 +161,24 @@ Every rejection identifies the owning stage.
 - Security design defect → Planner + Security Design.
 - Documentation inconsistency → Verifier or Planner; Documenter never invents behavior.
 - Deterministic gate failure → stage that owns the failed check.
+- Missing/invalid handoff → upstream stage responsible for producing that handoff.
 
-## 8. Human authority
+## 9. Release integrity
+
+A release decision must be based on current evidence for one canonical project/task identity.
+
+Release must reject:
+- missing mandatory artifacts;
+- stale evidence from a previous iteration;
+- artifacts belonging to another project or task;
+- contradictory mandatory verdicts;
+- illegal/skipped state transitions;
+- failed mandatory tests/checks;
+- unresolved required findings.
+
+An LLM cannot override these checks.
+
+## 10. Human authority
 
 Explicit human approval is required to:
 - change project invariants;
@@ -158,7 +190,9 @@ Explicit human approval is required to:
 - expand scope beyond the approved requirement;
 - deploy or modify production credentials unless separately authorized.
 
-## 9. Extension model
+Human approval is explicit evidence; it is not permission for an agent to infer a waiver.
+
+## 11. Extension model
 
 Projects extend the core with:
 
@@ -169,3 +203,9 @@ Projects extend the core with:
 and may define stricter policies in the project profile. Project skills can be loaded by Planner, Implementer, Verifier or Security based on the task.
 
 The core remains unchanged.
+
+## 12. Current hardening phase
+
+`NOM-TEST-007` established the current end-to-end baseline. Defects exposed by that smoke are being addressed in `NOM-FWK-008 — Framework Hardening`.
+
+See `docs/FRAMEWORK_HARDENING.md` for the workstreams and exit criteria.
